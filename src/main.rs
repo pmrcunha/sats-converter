@@ -22,7 +22,7 @@ struct XXBTZEUR {
 async fn main() -> Result<(), Error> {
     let matches = App::new("Sats Converter")
         .version("1.0")
-        .author("Paulo Cunha <paulomrcunha@gmail.com>")
+        .author("Paulo Cunha <public@pmrcunha.com>")
         .about("Converts sats to euros and euros to sats.")
         .arg(
             Arg::with_name("input currency")
