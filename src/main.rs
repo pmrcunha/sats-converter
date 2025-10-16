@@ -1,6 +1,7 @@
 use clap::{App, Arg};
 use reqwest::Error;
 use serde::Deserialize;
+use std::process;
 
 #[derive(Deserialize, Debug)]
 struct Price {
@@ -36,20 +37,26 @@ async fn main() -> Result<(), Error> {
         .get_matches();
 
     let currency = matches.value_of("input currency").unwrap_or("sats");
-    let input = matches
-        .value_of("value")
-        .expect("You must provide a value to convert!");
-    let input_nr = input
-        .parse::<f32>()
-        .expect("Provided value is not a number.");
+    let input = match matches.value_of("value") {
+        Some(input) => input,
+        None => {
+            eprintln!("[ERROR] You must provide a number to convert!");
+            process::exit(1)
+        }
+    };
+    let input_nr = input.parse::<f32>().map_err(|_| {
+        eprintln!("[ERROR] Provided value is not a number.");
+        process::exit(1)
+    })?;
 
     let request_url = format!("https://api.kraken.com/0/public/Ticker?pair=BTCEUR");
     let response = reqwest::get(&request_url).await?;
 
     let prices: Price = response.json().await?;
-    let btceur_price = prices.result.XXBTZEUR.c[0]
-        .parse::<f32>()
-        .expect("Failed to parse price received from Kraken.");
+    let btceur_price = prices.result.XXBTZEUR.c[0].parse::<f32>().map_err(|_| {
+        eprintln!("[ERROR] Failed to parse price received from Kraken.");
+        process::exit(1)
+    })?;
 
     let result = match currency {
         "sats" => format!(
