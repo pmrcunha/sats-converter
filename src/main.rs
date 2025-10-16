@@ -4,7 +4,6 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 struct Price {
-    error: Vec<String>,
     result: PriceResult,
 }
 
@@ -16,15 +15,7 @@ struct PriceResult {
 
 #[derive(Deserialize, Debug)]
 struct XXBTZEUR {
-    a: Vec<String>,
-    b: Vec<String>,
     c: Vec<String>,
-    v: Vec<String>,
-    p: Vec<String>,
-    t: Vec<f32>,
-    l: Vec<String>,
-    h: Vec<String>,
-    o: String,
 }
 
 #[tokio::main]
